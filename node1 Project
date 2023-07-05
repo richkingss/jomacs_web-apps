@@ -1,0 +1,42 @@
+//Declarative Scripts on Node1 Project. 
+
+
+pipeline{
+   agent {label "node1"}
+   tools{
+       maven "maven 3.8.8"
+   }
+
+      stages{
+         stage("1. Git clone from repo"){
+            steps{
+                sh "echo start of git clone"
+                git branch: 'main', credentialsId: 'git_credential', url: 'https://github.com/richkingss/web-app.git'
+                sh "echo end of git clone"
+            }
+        }
+         
+         stage("2. Build from Manven "){
+        
+            steps{
+                sh "echo start building from Maven"
+                sh "mvn clean package"
+                sh "echo end of build package"
+            }
+        }
+         
+         
+        stage("3. Code quality scan"){
+            
+            steps{
+                sh "echo start code scan"
+                sh "mvn sonar:sonar"
+                sh "echo end of code scan"
+            }
+        }
+        
+         
+      }
+}
+
+
