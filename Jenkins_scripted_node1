@@ -1,0 +1,24 @@
+//Scripted Groovy for node deployment 
+
+node("node1"){
+ 
+ def MHD = tool name: "maven 3.8.8"
+  
+  stage("1. Git clone from repo"){
+     sh "echo start of git clone"
+     git branch: 'main', credentialsId: 'git_credential', url: 'https://github.com/richkingss/web-app.git'
+     sh "echo end of git clone"
+   }
+   
+   stage("2. Build from Maven"){
+       sh "echo start building from maven"
+       sh "${MHD}/bin/mvn clean package"
+       sh "echo end of building from maven"
+   }
+   
+   stage("3. Code Quality Scan"){
+       sh "echo start code scan"
+       sh "${MHD}/bin/mvn sonar:sonar"
+       sh "echo end of code scan"
+   }
+}
