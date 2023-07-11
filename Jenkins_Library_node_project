@@ -1,0 +1,40 @@
+@Library('JomacsSharedLibrary') _
+pipeline{
+  agent { label "node1" }
+  tools{
+    maven "maven 3.8.8"
+  }
+
+    stages{
+      stage("1. Git clone from repo"){
+        steps{
+         sh "echo start of git clone"
+         git branch: 'main', credentialsId: 'git_credential', url: 'https://github.com/richkingss/web-app.git'
+         sh "echo end of git clone"
+        }
+      }
+      
+      stage("2. Cleaning your WD"){
+        steps{
+          build("Clean")
+        }  
+      }
+      
+      stage("3. Compile code"){
+        steps{
+          build("Compile")
+        }  
+      }
+      
+      stage("4. Test wit Maven"){
+        steps{
+           build("Test")
+        }  
+      }
+      stage("5. Package the Aritifact"){
+        steps{
+           build("Package")
+        }  
+      }
+    }
+}
